@@ -1,23 +1,11 @@
-import pathlib
-import shutil
+import tensorflow as tf
 
-dirInput = str(input("Enter direction: "))
-sortedDirInput = str(input("Enter direction for sorted images: "))
-
-foundDir = pathlib.Path(dirInput)
-foundSortedDir = pathlib.Path(sortedDirInput)
-
-imageExtensions = ['.jpg', '.jpeg', 'png', 'webp']
-imageNames = []
-numbersOfImages=0
-
-if foundDir.is_dir() and foundSortedDir.is_dir():
-    for item in foundDir.iterdir():
-        for imageExtensionsItem in imageExtensions:
-            if item.name.endswith(imageExtensionsItem):
-                imageNames.append(item.name)
-else:
-    print("Directory is not correct!")
-
-for item in imageNames:
-   shutil.move(dirInput + "/" + item, sortedDirInput + "/" + item)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+# Restrict TensorFlow to only allocate memory on the first GPU
+try:
+    tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+except RuntimeError as e:
+    # Visible devices must be set before GPUs have been initialized
+    print(e)

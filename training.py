@@ -43,31 +43,28 @@ val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 # Визначаємо кількість класів
 num_classes = len(class_names)
 
-# Створення та компіляція моделі
-model = tf.keras.models.Sequential([
+model_agumentation = tf.keras.models.Sequential([
     tf.keras.layers.experimental.preprocessing.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
-
-    # Додані шари для аугментації даних
     tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal", input_shape=(img_height, img_width, 3)),
     tf.keras.layers.experimental.preprocessing.RandomRotation(0.1),
-    tf.keras.layers.experimental.preprocessing.RandomZoom(0.1),
-    tf.keras.layers.experimental.preprocessing.RandomContrast(0.2),
+])
 
-    tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu'),
-    tf.keras.layers.MaxPooling2D(),
-
+# Створення та компіляція моделі
+model = tf.keras.models.Sequential([
+    model_agumentation,
     tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
     tf.keras.layers.MaxPooling2D(),
-
     tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
     tf.keras.layers.MaxPooling2D(),
-
+    tf.keras.layers.Conv2D(128, 3, padding='same', activation='relu'),
+    tf.keras.layers.MaxPooling2D(),
     tf.keras.layers.Dropout(0.2),
-
     tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(num_classes)
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
+
 
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -117,6 +114,6 @@ print()
 print('Training end!')
 print('Saving model...')
 
-model.save_weights('architecture')
+#model.save_weights('architecture')
 
 print('Model saved!')
