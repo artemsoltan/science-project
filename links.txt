@@ -2,3 +2,4 @@ https://www.baeldung.com/cs/ml-loss-accuracy
 https://towardsdatascience.com/what-the-hell-is-perceptron-626217814f53
 https://www.tensorflow.org/tutorials/images/classification
 https://www.kaggle.com/datasets/utkarshsaxenadn/fruits-classification
+https://www.youtube.com/watch?v=aircAruvnKk&ab_channel=3Blue1Brown
